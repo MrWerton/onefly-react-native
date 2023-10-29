@@ -1,39 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
-export default function App() {
-  const squadSize = {
-    w: useSharedValue(0),
-    h: useSharedValue(0)
-  }
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomePage } from './src/modules/home/pages/HomePage';
+import { DetailsPage } from './src/modules/home/pages/DetailsPage';
 
-  const squadStyle = useAnimatedStyle(()=>({
-    width: squadSize.w.value,
-    height: squadSize.h.value
-  }))
-  useEffect(()=>{
-    squadSize.h.value = withTiming(200, {duration:1000})
-    squadSize.w.value = withTiming(200, {duration:1000})
-  }, [])
+
+
+export type StackNavigationProps = {
+  home: undefined;
+  details: undefined;
+};
+
+export type Path = keyof StackNavigationProps
+
+
+const Stack = createNativeStackNavigator<StackNavigationProps>();
+
+export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.card, squadStyle]}/>      
-      <StatusBar style="auto" />
-    </SafeAreaView>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='home' component={HomePage} />
+        <Stack.Screen name='details' component={DetailsPage} />
+      </Stack.Navigator>
+    </NavigationContainer>  
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  
-    backgroundColor: '#afa',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  card:{
-    backgroundColor: "#f9f9f9",
-    borderRadius: 20
-  }
-});
+
